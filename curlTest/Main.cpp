@@ -26,10 +26,7 @@ using namespace std;
 int main() {
     
 	MailServer *mailSrv = new MailServer();
-
-	//write a few lines to take in the username and password from the user to aps to the curl command for retreval
     
-
 	mailboxInfo(*mailSrv);
 	mailboxMessages(*mailSrv);
 
@@ -119,7 +116,7 @@ static size_t writeCallback(void *contents, size_t size, size_t nmemb, void *use
 void mailboxMessages(MailServer &mailserv) {
 	CURL *curl;
 	CURLcode res;
-	string readBuff, usrName, pass, curlUsrPassParam, usrPopServ;
+	string readBuff, usrName, pass, curlUsrPassParam, usrPopServ, addFrom;
 
 	for (int i = 0; i < mailserv.messageInfo.size(); i++) {
 		int id;
@@ -152,7 +149,9 @@ void mailboxMessages(MailServer &mailserv) {
 			/* always cleanup */
 			curl_easy_cleanup(curl);
 
-			mailserv.message.push_back(readBuff);
+			addFrom = "From - \n" + readBuff;
+
+			mailserv.message.push_back(addFrom);
 			readBuff = "";
 
 		}
